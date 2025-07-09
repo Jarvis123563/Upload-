@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Update Daily Deal</title>
+</head>
+<body style="font-family:sans-serif; max-width:600px; margin:40px auto; padding:20px;">
+
+  <h2>🔄 Update Today's Deal</h2>
+
+  <textarea id="dealInput" rows="5" style="width:100%; padding:10px; font-size:16px;" placeholder="Type today’s deal here..."></textarea>
+
+  <button onclick="updateDeal()" style="margin-top:15px; padding:10px 20px; font-size:16px; background:linear-gradient(to right, #ff416c, #007cf0); color:white; border:none; border-radius:6px; cursor:pointer;">
+    Update
+  </button>
+
+  <p id="status" style="margin-top:20px; font-weight:500;"></p>
+
+  <script>
+    const BIN_ID = "686e389e41e5ad77b37aa660";
+    const API_KEY = "$2a$10$OWB0wBTxocZeAjW4yY5pyOQwnVSUr5a3bovRM9LZM5NJI8zpiT3eS";
+
+    function updateDeal() {
+      const dealText = document.getElementById("dealInput").value.trim();
+
+      if (!dealText) {
+        document.getElementById("status").innerText = "❌ Deal cannot be empty.";
+        return;
+      }
+
+      fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": API_KEY
+        },
+        body: JSON.stringify({ deal: dealText })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("status").innerText = "✅ Deal updated successfully!";
+        document.getElementById("dealInput").value = "";
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("status").innerText = "⚠️ Failed to update deal.";
+      });
+    }
+  </script>
+
+</body>
+</html>
